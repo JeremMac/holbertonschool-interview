@@ -62,12 +62,16 @@ heap_t *heap_insert(heap_t **root, int value)
 		return (*root);
 	}
 
-	heap_t *parent = find_insertion_point(*root);
+	heap_t *parent;
+
+	parent = find_insertion_point(*root);
 
 	if (!parent)
 		return (NULL);
 
-	heap_t *new_node = binary_tree_node(parent, value);
+	heap_t *new_node;
+
+	new_node = binary_tree_node(parent, value);
 
 	if (!new_node)
 		return (NULL);
