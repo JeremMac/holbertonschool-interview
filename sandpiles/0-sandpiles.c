@@ -1,18 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "sandpiles.h"
 
 /**
- * sandpiles_sum - a function that computes
- * the sum of two sandpiles
- * @grid1: Left 3x3 grid
- * @grid2: Right 3x3 grid
+ * sandpiles_sum - Computes the sum of two sandpiles
+ * @grid1: First 3x3 grid
+ * @grid2: Second 3x3 grid
  */
-
 void sandpiles_sum(int grid1[3][3], int grid2[3][3])
 {
-	int unstable = 0;
 	int i, j;
-
 
 	for (i = 0; i < 3; i++)
 	{
@@ -22,39 +19,73 @@ void sandpiles_sum(int grid1[3][3], int grid2[3][3])
 		}
 	}
 
-	do {
-		unstable = 0;
-
-
-		printf("=\n");
+	while (!is_stable(grid1))
+	{
 		print_grid(grid1);
-
-		for (i = 0; i < 3; i++)
-		{
-			for (j = 0; j < 3; j++)
-			{
-				if (grid1[i][j] > 3)
-				{
-					unstable = 1;
-					grid1[i][j] -= 4;
-					if (i > 0)
-						grid1[i - 1][j]++;
-					if (i < 2)
-						grid1[i + 1][j]++;
-					if (j > 0)
-						grid1[i][j - 1]++;
-					if (j < 2)
-						grid1[i][j + 1]++;
-				}
-			}
-		}
-	} while (unstable);
+		topple(grid1);
+	}
 }
 
 /**
- * print_grid - Print 3x3 grid
- * @grid: 3x3 grid
- *
+ * topple - Topples the sandpile if any cell has more than 3 grains
+ * @grid: 3x3 grid to topple
+ */
+void topple(int grid[3][3])
+{
+	int i, j;
+	int temp[3][3] = {0};
+
+	for (i = 0; i < 3; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			if (grid[i][j] > 3)
+			{
+				temp[i][j] -= 4;
+				if (i > 0)
+					temp[i - 1][j]++;
+				if (i < 2)
+					temp[i + 1][j]++;
+				if (j > 0)
+					temp[i][j - 1]++;
+				if (j < 2)
+					temp[i][j + 1]++;
+			}
+		}
+	}
+
+	for (i = 0; i < 3; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			grid[i][j] += temp[i][j];
+		}
+	}
+}
+
+/**
+ * is_stable - Checks if the sandpile is stable
+ * @grid: 3x3 grid to check
+ * Return: 1 if stable, 0 if not
+ */
+int is_stable(int grid[3][3])
+{
+	int i, j;
+
+	for (i = 0; i < 3; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			if (grid[i][j] > 3)
+				return (0);
+		}
+	}
+	return (1);
+}
+
+/**
+ * print_grid - Prints a 3x3 grid
+ * @grid: 3x3 grid to print
  */
 void print_grid(int grid[3][3])
 {
