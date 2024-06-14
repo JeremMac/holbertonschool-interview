@@ -1,1 +1,1 @@
-Palindrow directory
+Palindrom directory
