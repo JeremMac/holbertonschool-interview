@@ -2,6 +2,11 @@
 #include <stdint.h>
 #include "slide_line.h"
 
+static void slide_left(int *line, size_t size);
+static void slide_right(int *line, size_t size);
+static void merge_left(int *line, size_t size);
+static void merge_right(int *line, size_t size);
+
 /**
  * slide_line - Prints out an array of integer, followed by a new line
  *
