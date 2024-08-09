@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "binary_trees.h"
 
-avl_t *sorted_array_to_avl(int *array, size_t size); // Prototype de la fonction
+avl_t *sorted_array_to_avl(int *array, size_t size);
 
 /**
  * create_avl - Aide à créer un arbre AVL à partir d'un tableau trié
@@ -14,23 +14,23 @@ avl_t *sorted_array_to_avl(int *array, size_t size); // Prototype de la fonction
  */
 avl_t *create_avl(int *array, int start, int end, avl_t *parent)
 {
-    avl_t *node;
-    int mid;
+	avl_t *node;
+	int mid;
 
-    if (start > end)
-        return (NULL);
+	if (start > end)
+		return (NULL);
 
-    mid = (start + end) / 2;
-    node = malloc(sizeof(avl_t));
-    if (!node)
-        return (NULL);
+	mid = (start + end) / 2;
+	node = malloc(sizeof(avl_t));
+	if (!node)
+		return (NULL);
 
-    node->n = array[mid];
-    node->parent = parent; // Assigner le parent
-    node->left = create_avl(array, start, mid - 1, node);
-    node->right = create_avl(array, mid + 1, end, node);
+	node->n = array[mid];
+	node->parent = parent;
+	node->left = create_avl(array, start, mid - 1, node);
+	node->right = create_avl(array, mid + 1, end, node);
 
-    return (node);
+	return (node);
 }
 
 /**
@@ -42,8 +42,8 @@ avl_t *create_avl(int *array, int start, int end, avl_t *parent)
  */
 avl_t *sorted_array_to_avl(int *array, size_t size)
 {
-    if (array == NULL || size == 0)
-        return (NULL);
+	if (array == NULL || size == 0)
+		return (NULL);
 
-    return (create_avl(array, 0, size - 1, NULL));
+	return (create_avl(array, 0, size - 1, NULL));
 }
