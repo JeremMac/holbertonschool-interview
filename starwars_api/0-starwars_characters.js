@@ -8,20 +8,22 @@ def get_star_wars_characters(movie_id):
     response = requests.get(url)
     
     if response.status_code != 200:
-        print(f"Erreur: Impossible de récupérer les données pour le film ID {movie_id}.")
+        print(f"Erreur: impossible de récupérer les données pour le film ID {movie_id}")
         return
     
+
     film_data = response.json()
     
-    for character_url in film_data['characters']:
+    characters = film_data.get("characters", [])
+    
+    for character_url in characters:
         character_response = requests.get(character_url)
         character_data = character_response.json()
-        print(character_data['name'])
+        print(character_data.get("name"))
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: ./0-starwars_characters.py <movie_id>")
-        sys.exit(1)
-    
-    movie_id = sys.argv[1]
-    get_star_wars_characters(movie_id)
+        print("Usage: ./0-starwars_characters.py <Movie ID>")
+    else:
+        movie_id = sys.argv[1]
+        get_star_wars_characters(movie_id)
