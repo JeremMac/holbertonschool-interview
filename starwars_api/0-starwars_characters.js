@@ -1,3 +1,4 @@
+#!/usr/bin/node
 import requests
 import sys
 
