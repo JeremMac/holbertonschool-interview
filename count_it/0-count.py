@@ -1,42 +1,56 @@
 #!/usr/bin/python3
 """
-Count words in Reddit hot articles.
+Recursive function to query Reddit API, parse titles of hot articles, and count keywords.
 """
+
 import requests
 
-def count_words(subreddit, word_list):
-    """Recursively count occurrences of keywords in hot articles."""
-    if not isinstance(word_list, list) or len(word_list) == 0:
-        return
 
+def count_words(subreddit, word_list, after='', word_count={}):
+    """ Recursively counts keywords in hot article titles from a subreddit. """
+    
+    # Initialize word count dict on first call
+    if not word_count:
+        word_count = {word.lower(): 0 for word in word_list}
+
+    # Prepare the URL to query the Reddit API
     url = f'https://www.reddit.com/r/{subreddit}/hot.json'
     headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers, allow_redirects=False)
-
-    if response.status_code != 200:
-        return
-
-    data = response.json()
-    articles = data.get('data', {}).get('children', [])
+    params = {'after': after, 'limit': 100}
     
-    word_count = {}
-    for article in articles:
-        title = article['data']['title']
-        for word in word_list:
-            count = title.lower().split().count(word.lower())
-            if count > 0:
-                if word.lower() in word_count:
-                    word_count[word.lower()] += count
-                else:
-                    word_count[word.lower()] = count
-
-    # Sort the results
-    sorted_words = sorted(word_count.items(), key=lambda item: (-item[1], item[0]))
-
-    for word, count in sorted_words:
-        print(f"{word}: {count}")
-
-    # If there are more articles, call the function recursively
-    after = data.get('data', {}).get('after')
-    if after:
-        count_words(subreddit, word_list, after)
+    # Perform the API request
+    try:
+        response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+        
+        # Check if the subreddit is invalid
+        if response.status_code != 200:
+            return
+        
+        # Parse the JSON response
+        data = response.json().get('data', {})
+        children = data.get('children', [])
+        after = data.get('after', None)
+        
+        # Process each article title
+        for child in children:
+            title = child.get('data', {}).get('title', '').lower().split()
+            for word in word_list:
+                word_lower = word.lower()
+                word_count[word_lower] += title.count(word_lower)
+        
+        # If there's another page, call recursively
+        if after is not None:
+            return count_words(subreddit, word_list, after, word_count)
+        
+        # Once recursion is done, sort and print results
+        if after is None:
+            sorted_words = sorted(
+                word_count.items(),
+                key=lambda kv: (-kv[1], kv[0])
+            )
+            for word, count in sorted_words:
+                if count > 0:
+                    print(f"{word}: {count}")
+    
+    except requests.exceptions.RequestException:
+        return
