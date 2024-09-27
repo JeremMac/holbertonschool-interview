@@ -7,22 +7,23 @@
  */
 void heapify_down(heap_t *node)
 {
-    heap_t *largest = node;
-    heap_t *left = node->left;
-    heap_t *right = node->right;
+	heap_t *largest = node;
+	heap_t *left = node->left;
+	heap_t *right = node->right;
 
-    if (left && left->n > largest->n)
-        largest = left;
-    if (right && right->n > largest->n)
-        largest = right;
+	if (left && left->n > largest->n)
+		largest = left;
+	if (right && right->n > largest->n)
+		largest = right;
 
-    if (largest != node)
-    {
-        int temp = node->n;
-        node->n = largest->n;
-        largest->n = temp;
-        heapify_down(largest);
-    }
+	if (largest != node)
+	{
+		int temp = node->n;
+
+		node->n = largest->n;
+		largest->n = temp;
+		heapify_down(largest);
+	}
 }
 
 /**
@@ -33,8 +34,8 @@ void heapify_down(heap_t *node)
  */
 void enqueue(heap_t **queue, heap_t *node, int *size)
 {
-    queue[*size] = node;
-    (*size)++;
+	queue[*size] = node;
+	(*size)++;
 }
 
 /**
@@ -46,8 +47,8 @@ void enqueue(heap_t **queue, heap_t *node, int *size)
  */
 heap_t *dequeue(heap_t **queue, int *front)
 {
-    (*front)++;
-    return queue[*front - 1];
+	(*front)++;
+	return (queue[*front - 1]);
 }
 
 /**
@@ -58,25 +59,25 @@ heap_t *dequeue(heap_t **queue, int *front)
  */
 heap_t *heap_last_node(heap_t *root)
 {
-    int size = 0, front = 0;
-    heap_t *last = NULL;
-    heap_t *queue[1024];  /* File d'attente de taille suffisante */
+	int size = 0, front = 0;
+	heap_t *last = NULL;
+	heap_t *queue[1024];  /* File d'attente de taille suffisante */
 
-    if (!root)
-        return (NULL);
+	if (!root)
+		return (NULL);
 
-    enqueue(queue, root, &size);  /* Enfile la racine */
+	enqueue(queue, root, &size);  /* Enfile la racine */
 
-    while (front < size)
-    {
-        last = dequeue(queue, &front);  /* Défilement du premier nœud */
-        if (last->left)
-            enqueue(queue, last->left, &size);
-        if (last->right)
-            enqueue(queue, last->right, &size);
-    }
+	while (front < size)
+	{
+		last = dequeue(queue, &front);  /* Défilement du premier nœud */
+		if (last->left)
+			enqueue(queue, last->left, &size);
+		if (last->right)
+			enqueue(queue, last->right, &size);
+	}
 
-    return (last);
+	return (last);
 }
 
 /**
@@ -87,32 +88,32 @@ heap_t *heap_last_node(heap_t *root)
  */
 int heap_extract(heap_t **root)
 {
-    int extracted_value;
-    heap_t *last_node, *temp_root;
+	int extracted_value;
+	heap_t *last_node, *temp_root;
 
-    if (!root || !*root)
-        return (0);
+	if (!root || !*root)
+		return (0);
 
-    extracted_value = (*root)->n;
-    if (!(*root)->left && !(*root)->right)
-    {
-        free(*root);
-        *root = NULL;
-        return (extracted_value);
-    }
+	extracted_value = (*root)->n;
+	if (!(*root)->left && !(*root)->right)
+	{
+		free(*root);
+		*root = NULL;
+		return (extracted_value);
+	}
 
-    last_node = heap_last_node(*root);
-    temp_root = *root;
-    
-    temp_root->n = last_node->n;  // Replace root value with last node value
-    if (last_node->parent->right == last_node)
-        last_node->parent->right = NULL;
-    else
-        last_node->parent->left = NULL;
+	last_node = heap_last_node(*root);
+	temp_root = *root;
 
-    free(last_node);
+	temp_root->n = last_node->n;  /*Replace root value with last node value*/
+	if (last_node->parent->right == last_node)
+		last_node->parent->right = NULL;
+	else
+		last_node->parent->left = NULL;
 
-    heapify_down(temp_root);  // Restore heap property
+	free(last_node);
 
-    return (extracted_value);
+	heapify_down(temp_root);  /* Restore heap property*/
+
+	return (extracted_value);
 }
