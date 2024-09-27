@@ -26,20 +26,57 @@ void heapify_down(heap_t *node)
 }
 
 /**
+ * enqueue - Adds a node to the end of a queue.
+ * @queue: Pointer to the current queue.
+ * @node: Node to add.
+ * @size: Current size of the queue.
+ */
+void enqueue(heap_t **queue, heap_t *node, int *size)
+{
+    queue[*size] = node;
+    (*size)++;
+}
+
+/**
+ * dequeue - Removes a node from the front of the queue.
+ * @queue: Pointer to the current queue.
+ * @front: Pointer to the index of the front of the queue.
+ *
+ * Return: The node dequeued.
+ */
+heap_t *dequeue(heap_t **queue, int *front)
+{
+    (*front)++;
+    return queue[*front - 1];
+}
+
+/**
  * heap_last_node - Gets the last node in level-order traversal.
  * @root: Pointer to the root of the heap.
  *
- * Return: Pointer to the last node.
+ * Return: Pointer to the last node in the heap.
  */
 heap_t *heap_last_node(heap_t *root)
 {
-    if (!root->left && !root->right)
-        return (root);
+    int size = 0, front = 0;
+    heap_t *last = NULL;
+    heap_t *queue[1024];  /* File d'attente de taille suffisante */
 
-    if (!root->right)
-        return (root->left);
+    if (!root)
+        return (NULL);
 
-    return (heap_last_node(root->right));
+    enqueue(queue, root, &size);  /* Enfile la racine */
+
+    while (front < size)
+    {
+        last = dequeue(queue, &front);  /* Défilement du premier nœud */
+        if (last->left)
+            enqueue(queue, last->left, &size);
+        if (last->right)
+            enqueue(queue, last->right, &size);
+    }
+
+    return (last);
 }
 
 /**
