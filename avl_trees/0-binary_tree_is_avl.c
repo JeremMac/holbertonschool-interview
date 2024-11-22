@@ -10,7 +10,7 @@
  */
 int max(int a, int b)
 {
-    return (a > b ? a : b);
+	return (a > b ? a : b);
 }
 
 /**
@@ -21,9 +21,9 @@ int max(int a, int b)
  */
 int height(const binary_tree_t *tree)
 {
-    if (!tree)
-        return (0);
-    return (1 + max(height(tree->left), height(tree->right)));
+	if (!tree)
+		return (0);
+	return (1 + max(height(tree->left), height(tree->right)));
 }
 
 /**
@@ -36,12 +36,12 @@ int height(const binary_tree_t *tree)
  */
 int is_bst(const binary_tree_t *tree, int min, int max)
 {
-    if (!tree)
-        return (1);
-    if (tree->n <= min || tree->n >= max)
-        return (0);
-    return (is_bst(tree->left, min, tree->n) &&
-            is_bst(tree->right, tree->n, max));
+	if (!tree)
+		return (1);
+	if (tree->n <= min || tree->n >= max)
+		return (0);
+	return (is_bst(tree->left, min, tree->n) &&
+			is_bst(tree->right, tree->n, max));
 }
 
 /**
@@ -52,25 +52,25 @@ int is_bst(const binary_tree_t *tree, int min, int max)
  */
 int is_avl_helper(const binary_tree_t *tree)
 {
-    int left_height, right_height;
+	int left_height, right_height;
 
-    if (!tree)
-        return (1);
+	if (!tree)
+		return (1);
 
-    /* Check BST property */
-    if (!is_bst(tree, INT_MIN, INT_MAX))
-        return (0);
+	/* Check BST property */
+	if (!is_bst(tree, INT_MIN, INT_MAX))
+		return (0);
 
-    /* Compute heights of left and right subtrees */
-    left_height = height(tree->left);
-    right_height = height(tree->right);
+	/* Compute heights of left and right subtrees */
+	left_height = height(tree->left);
+	right_height = height(tree->right);
 
-    /* Check AVL property */
-    if (abs(left_height - right_height) > 1)
-        return (0);
+	/* Check AVL property */
+	if (abs(left_height - right_height) > 1)
+		return (0);
 
-    /* Recursively check subtrees */
-    return (is_avl_helper(tree->left) && is_avl_helper(tree->right));
+	/* Recursively check subtrees */
+	return (is_avl_helper(tree->left) && is_avl_helper(tree->right));
 }
 
 /**
@@ -81,7 +81,7 @@ int is_avl_helper(const binary_tree_t *tree)
  */
 int binary_tree_is_avl(const binary_tree_t *tree)
 {
-    if (!tree)
-        return (0);
-    return (is_avl_helper(tree));
+	if (!tree)
+		return (0);
+	return (is_avl_helper(tree));
 }
