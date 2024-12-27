@@ -4,33 +4,51 @@ A module that contains isWinner function.
 """
 
 
-def isWinner(x, nums):
-    """
-    A function that returns the winner's name.
-    """
-    def count_primes(n):
-        """Returns prime numbers until n."""
-        is_prime = [True] * (n + 1)
-        p = 2
-        while (p * p <= n):
-            if (is_prime[p] == True):
-                for i in range(p * p, n + 1, p):
-                    is_prime[i] = False
-            p += 1
-        return sum(1 for p in range(2, n + 1) if is_prime[p])
+def is_prime(num):
+    """Check if a number is prime."""
+    if num < 2:
+        return False
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
 
-    maria_wins = 0
-    ben_wins = 0
+
+def sieve_up_to(max_num):
+    """Generate a list of booleans where True indicates
+    that the index is a prime number.
+    """
+    primes = [True] * (max_num + 1)
+    primes[0] = primes[1] = False
+    for i in range(2, int(max_num**0.5) + 1):
+        if primes[i]:
+            for multiple in range(i * i, max_num + 1, i):
+                primes[multiple] = False
+    return primes
+
+
+def isWinner(x, nums):
+    """Determine the winner of the prime game."""
+    if not nums or x < 1:
+        return None
+
+    max_num = max(nums)
+    primes = sieve_up_to(max_num)
+
+    wins = {"Maria": 0, "Ben": 0}
 
     for n in nums:
-        if count_primes(n) % 2 == 1:
-            maria_wins += 1
-        else:
-            ben_wins += 1
+        prime_count = sum(primes[:n + 1])
 
-    if maria_wins > ben_wins:
+        # Maria starts first; if prime_count is odd, Maria wins this round
+        if prime_count % 2 == 1:
+            wins["Maria"] += 1
+        else:
+            wins["Ben"] += 1
+
+    if wins["Maria"] > wins["Ben"]:
         return "Maria"
-    elif ben_wins > maria_wins:
+    elif wins["Ben"] > wins["Maria"]:
         return "Ben"
     else:
         return None
