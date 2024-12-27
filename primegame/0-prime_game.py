@@ -1,8 +1,15 @@
 #!/usr/bin/python3
+"""
+A module that contains isWinner function.
+"""
+
 
 def isWinner(x, nums):
+    """
+    A function that returns the winner's name.
+    """
     def count_primes(n):
-        """Retourne le nombre de nombres premiers jusqu'à n."""
+        """Returns prime numbers until n."""
         is_prime = [True] * (n + 1)
         p = 2
         while (p * p <= n):
